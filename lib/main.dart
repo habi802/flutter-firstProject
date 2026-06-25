@@ -2,36 +2,55 @@ import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  bool enabled = false;
+  String stateText = "disable";
+
+  void changeCheck() {
+    if (enabled) {
+      stateText = "disable";
+      enabled = false;
+    } else {
+      stateText = "enable";
+      enabled = true;
+    }
+  }
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+        home: Scaffold(
+          appBar: AppBar(
+            title: Text('Stateless Test'),
+          ),
+          body: Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  icon: (enabled ? Icon(Icons.check_box, size: 20) :
+                  Icon(Icons.check_box_outline_blank, size: 20)),
+                  color: Colors.red,
+                  onPressed: changeCheck,
+                ),
+                Container(
+                  padding: EdgeInsets.only(left: 16),
+                  child: Text(
+                    '$stateText',
+                    style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        )
     );
   }
 }
