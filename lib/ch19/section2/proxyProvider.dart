@@ -3,12 +3,27 @@ import 'package:provider/provider.dart';
 
 class Counter with ChangeNotifier {
   int _count = 0;
-
   int get count => _count;
 
   void increment() {
     _count++;
     notifyListeners();
+  }
+}
+
+class Sum {
+  int _sum = 0;
+  int get sum => _sum;
+
+  void set sum(value) {
+    _sum = 0;
+    for (int i = 1; i <= value; i++) {
+      _sum += i;
+    }
+  }
+
+  Sum(Counter counter) {
+    sum = counter.count;
   }
 }
 
@@ -20,13 +35,26 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('MultiProvider Test'),
+          title: Text('ProxyProvider Test'),
         ),
         body: MultiProvider(
           providers: [
-            Provider<int>.value(value: 10),
-            Provider<String>.value(value: "hello"),
             ChangeNotifierProvider<Counter>.value(value: Counter()),
+            ProxyProvider<Counter, Sum>(
+              update: (context, model, sum) {
+                if (sum != null) {
+                  sum.sum = model.count;
+                  return sum;
+                } else {
+                  return Sum(model);
+                }
+              },
+            ),
+            ProxyProvider2<Counter, Sum, String>(
+              update: (context, model1, model2, data) {
+                return "count : ${model1.count}, sum : ${model2.sum}";
+              },
+            ),
           ],
           child: SubWidget(),
         ),
@@ -39,7 +67,7 @@ class SubWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var counter = Provider.of<Counter>(context);
-    var int_data = Provider.of<int>(context);
+    var sum = Provider.of<Sum>(context);
     var string_data = Provider.of<String>(context);
 
     return Container(
@@ -49,7 +77,7 @@ class SubWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Provider : ',
+              'count : ${counter.count}',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -57,7 +85,7 @@ class SubWidget extends StatelessWidget {
               ),
             ),
             Text(
-              'int data : $int_data',
+              'sum : ${sum.sum}',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -65,15 +93,7 @@ class SubWidget extends StatelessWidget {
               ),
             ),
             Text(
-              'string data : $string_data',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            Text(
-              'Counter data : ${counter.count}',
+              'string : $string_data',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,

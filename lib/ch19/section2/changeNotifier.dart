@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Provider Test'),
+          title: Text('ChangeNotifierProvider Test'),
         ),
         body: ChangeNotifierProvider<Counter>.value(
           value: Counter(),
