@@ -50,6 +50,8 @@ dependencies:
   shared_preferences: ^2.5.3
   sqflite: ^2.4.2
   firebase_core: ^4.12.1
+  firebase_auth: ^6.5.6
+  fluttertoast: ^9.0.0
 
 dev_dependencies:
   flutter_test:
